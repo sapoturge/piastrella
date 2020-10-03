@@ -9,7 +9,7 @@ gresource_piastrella = gnome.compile_resources(
     source_dir: 'data'
 )
 
-add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name(), language:'c')
+add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language:'c')
 
 cc = meson.get_compiler('c')
 
@@ -28,7 +28,7 @@ i18n.merge_file(
     output: meson.project_name() + '.desktop',
     po_dir: join_paths(meson.source_root(), 'po'),
     type: 'desktop',
-    install: 'true',
+    install: true,
     install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
@@ -60,4 +60,4 @@ install_data(
     install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas')
 )
 
-meson.add_post_install_script('meson/post_install.py')
+meson.add_install_script('meson/post_install.py')
