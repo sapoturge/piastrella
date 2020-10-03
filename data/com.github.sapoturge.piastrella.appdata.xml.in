@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8">
+<component type="desktop">
+  <id>com.github.sapoturge.piastrella</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Piastrella</name>
+  <developer_name>John Hiatt</developer_name>
+  <summary>Simple tileset editor</summary>
+  <description>
+    <p>Coming soon</p>
+  </description>
+  <releases>
+  </releases>
+</component>

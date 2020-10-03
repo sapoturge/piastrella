@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Piastrella
+GenericName=Tileset Editor
+Comment=See what you're doing
+Categories=Graphics;Development;
+Exec=com.github.sapoturge.piastrella
+Icon=com.github.sapoturge.piastrella
+Terminal=false
+Type=Application
+Mimetype=image/png;
