@@ -75,6 +75,14 @@ public class Piastrella : Gtk.Application {
            return false;
         });
 
+        var file = File.new_for_commandline_arg ("test.png");
+
+        if (file.query_exists ()) {
+            var image = new Png.from_file (File.new_for_commandline_arg ("test.png"));
+        } else {
+            var image = new Png ();
+        }
+
         main_window.show_all ();
     }
 
