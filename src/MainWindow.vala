@@ -10,15 +10,10 @@ class MainWindow : Gtk.ApplicationWindow {
         tileset.valign = CENTER;
 
         var tiles = new TileView ();
-        tiles.hexpand = true;
         
         var palette = new Gtk.FlowBox ();
-        palette.vexpand = true;
-        palette.hexpand = false;
 
         var toolbox = new Gtk.FlowBox ();
-        toolbox.vexpand = true;
-        palette.hexpand = false;
 
         var sidebar = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
         sidebar.pack_start (toolbox, true);
