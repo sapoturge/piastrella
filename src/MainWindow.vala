@@ -5,25 +5,30 @@ class MainWindow : Gtk.ApplicationWindow {
 
     construct {
         var tileset = new TileSetView ();
-        tileset.expand = true;
+        tileset.set_size_request(256, 256);
+        tileset.halign = CENTER;
+        tileset.valign = CENTER;
 
         var tiles = new TileView ();
-        tiles.expand = true;
+        tiles.hexpand = true;
         
         var palette = new Gtk.FlowBox ();
-        palette.expand = true;
+        palette.vexpand = true;
+        palette.hexpand = false;
 
         var toolbox = new Gtk.FlowBox ();
-        toolbox.expand = true;
+        toolbox.vexpand = true;
+        palette.hexpand = false;
 
         var sidebar = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
-        sidebar.pack_start (toolbox);
-        sidebar.pack_start (palette);
+        sidebar.pack_start (toolbox, true);
+        sidebar.pack_start (palette, true);
+        sidebar.pack_start (tileset, false);
+        sidebar.hexpand = false;
 
         var layout = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-        layout.pack_start (sidebar);
-        layout.pack_start (tileset);
-        layout.pack_start (tiles);
+        layout.pack_start (sidebar, false);
+        layout.pack_start (tiles, true, true);
         layout.expand = true;
 
         add(layout);
