@@ -16,6 +16,9 @@ cc = meson.get_compiler('c')
 executable(
     meson.project_name(),
     'src/Application.vala',
+    'src/MainWindow.vala',
+    'src/widgets/TileSetView.vala',
+    'src/widgets/TileView.vala',
     gresource_piastrella,
     dependencies: [
         dependency('gtk+-3.0')

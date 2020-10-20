@@ -31,7 +31,7 @@ public class Piastrella : Gtk.Application {
     }
 
     protected override void activate () {
-        var main_window = new Gtk.ApplicationWindow (this);
+        var main_window = new MainWindow (this);
         main_window.insert_action_group ("piastrella", actions);
         main_window.title = _("Piastrella");
 
