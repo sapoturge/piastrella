@@ -23,6 +23,9 @@ executable(
     'src/png/ImageData.vala',
     'src/png/End.vala',
     'src/png/UnknownChunk.vala',
+    'src/MainWindow.vala',
+    'src/widgets/TileSetView.vala',
+    'src/widgets/TileView.vala',
     gresource_piastrella,
     dependencies: [
         dependency('gtk+-3.0')
