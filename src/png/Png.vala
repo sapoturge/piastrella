@@ -4,6 +4,24 @@ public class Png : Object {
     private Palette palette;
     private ImageData data;
 
+    public int width {
+        get {
+            return header.width;
+        }
+        set {
+            header.width = value;
+        }
+    }
+
+    public int height {
+        get {
+            return header.height;
+        }
+        set {
+            header.height = value;
+        }
+    }
+
     public Png () {
         header = new Header ();
         palette = new Palette ();
@@ -83,5 +101,10 @@ public class Png : Object {
             buffer = new uint8[4];
             input.read_all (buffer, out read);
         }
+    }
+
+    public Gdk.RGBA get_color (int x, int y) {
+        int index = data.pixels [y, x];
+        return ((PaletteEntry) palette.get_item (index)).color;
     }
 }

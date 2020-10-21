@@ -1,6 +1,6 @@
-public class ImageData : Chunk {
+internal class ImageData : Chunk {
     private uint8[] data;
-    private uint8[,] pixels;
+    public uint8[,] pixels { get; set; }
 
     public ImageData () {
         base ("IDAT", 0);

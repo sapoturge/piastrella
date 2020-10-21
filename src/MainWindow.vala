@@ -4,7 +4,10 @@ class MainWindow : Gtk.ApplicationWindow {
     }
 
     construct {
-        var tileset = new TileSetView ();
+    }
+
+    public void open (Png image) {
+        var tileset = new TileSetView (image);
         tileset.set_size_request(256, 256);
         tileset.halign = CENTER;
         tileset.valign = CENTER;

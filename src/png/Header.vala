@@ -1,4 +1,4 @@
-public class Header : Chunk {
+internal class Header : Chunk {
     public int width { get; set; }
     public int height { get; set; }
     public int bit_depth { get; set; }
