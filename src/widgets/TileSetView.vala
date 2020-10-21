@@ -3,6 +3,7 @@ class TileSetView : Gtk.DrawingArea {
 
     public TileSetView (Png image) {
         this.image = image;
+        set_size_request (image.width, image.height);
     }
 
     construct {
