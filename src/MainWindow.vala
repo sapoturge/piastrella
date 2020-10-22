@@ -11,6 +11,7 @@ class MainWindow : Gtk.ApplicationWindow {
         tileset.valign = CENTER;
 
         var tiles = new TileView ();
+        tiles.image = image;
         
         var palette = new Gtk.FlowBox ();
         palette.bind_model (image.get_palette (), (obj) => {
