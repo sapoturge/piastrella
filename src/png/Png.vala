@@ -111,4 +111,8 @@ public class Png : Object {
         int index = data.pixels [y, x];
         return ((PaletteEntry) palette.get_item (index)).color;
     }
+
+    public void set_pixels (uint8[,] pixels) {
+        data.pixels = pixels;
+    }
 }
