@@ -1,4 +1,4 @@
-public class Palette : Chunk, ListModel {
+internal class Palette : Chunk, ListModel {
     private PaletteEntry[] colors;
 
     public Palette () {
