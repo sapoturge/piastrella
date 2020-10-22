@@ -73,23 +73,21 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
     construct {
         draw.connect ((cr) => {
             cr.save ();
-            // cr.translate (width / 2, height / 2);
-            cr.translate (-hadjustment.value, -vadjustment.value);
+            cr.translate ((int) (-hadjustment.value), (int) (-vadjustment.value));
             cr.scale (zoom, zoom);
+
+            var surface = image.get_surface ();
 
             for (int i = 0; i < 16; i++) {
                 for (int j = 0; j < 16; j++) {
                     var tile = tiles[i,j];
-                    var tile_x = (tile % 16) * 16;
-                    var tile_y = (tile / 16) * 16;
-                    for (int x = 0; x < 16; x++) {
-                        for (int y = 0; y < 16; y++) {
-                            cr.rectangle (i * 16 + x, j * 16 + y, 1, 1);
-                            var color = image.get_color (tile_x + x, tile_y + y);
-                            cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
-                            cr.fill ();
-                        }
-                    }
+                    var tile_x = tile % 16;
+                    var tile_y = tile / 16;
+                    cr.set_source_surface (surface, (i - tile_x) * 16, (j - tile_y) * 16);
+                    var pattern = cr.get_source ();
+                    pattern.set_filter (Cairo.Filter.NEAREST);
+                    cr.rectangle (i*16, j*16, 16, 16);
+                    cr.fill ();
                 }
             }
             

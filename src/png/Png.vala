@@ -4,6 +4,9 @@ public class Png : Object {
     private Palette palette;
     private ImageData data;
 
+    private uchar[] pixel_data;
+    private Cairo.Surface surface;
+
     public int width {
         get {
             return header.width;
@@ -105,6 +108,12 @@ public class Png : Object {
             buffer = new uint8[4];
             input.read_all (buffer, out read);
         }
+
+        pixel_data = new uchar[header.width * header.height * 4];
+
+        refresh_pixels ();
+
+        surface = new Cairo.ImageSurface.for_data (pixel_data, Cairo.Format.ARGB32, header.width, header.height, header.width * 4);
     }
 
     public Gdk.RGBA get_color (int x, int y) {
@@ -114,5 +123,22 @@ public class Png : Object {
 
     public void set_pixels (uint8[,] pixels) {
         data.pixels = pixels;
+        refresh_pixels ();
+    }
+
+    public Cairo.Surface get_surface () {
+        return surface;
+    }
+
+    private void refresh_pixels () {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                var color = get_color (x, y);
+                pixel_data [(y * width + x) * 4 + 0] = (uchar) (color.blue * 255);
+                pixel_data [(y * width + x) * 4 + 1] = (uchar) (color.green * 255);
+                pixel_data [(y * width + x) * 4 + 2] = (uchar) (color.red * 255);
+                pixel_data [(y * width + x) * 4 + 3] = (uchar) (color.alpha * 255);
+            }
+        }
     }
 }
