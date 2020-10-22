@@ -29,6 +29,10 @@ public class Png : Object {
         chunks = {header, palette, data, new End ()};
     }
 
+    public ListModel get_palette () {
+        return palette;
+    }
+
     public Png.from_file (File file) {
         FileInputStream input = file.read ();
 

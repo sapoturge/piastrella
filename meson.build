@@ -26,6 +26,7 @@ executable(
     'src/MainWindow.vala',
     'src/widgets/TileSetView.vala',
     'src/widgets/TileView.vala',
+    'src/widgets/ColorButton.vala',
     gresource_piastrella,
     dependencies: [
         dependency('gtk+-3.0')

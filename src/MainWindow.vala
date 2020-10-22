@@ -13,12 +13,28 @@ class MainWindow : Gtk.ApplicationWindow {
         var tiles = new TileView ();
         
         var palette = new Gtk.FlowBox ();
+        palette.bind_model (image.get_palette (), (obj) => {
+            var entry = (PaletteEntry) obj;
+            var chooser = new ColorButton.with_rgba (entry.color);
+            chooser.bind_property ("rgba", entry, "color");
+            chooser.margin = 0;
+            return chooser;
+        });
+        palette.homogeneous = true;
+        // palette.min_children_per_line = 8;
+        palette.max_children_per_line = 8;
+        palette.selection_mode = 0;
+        palette.row_spacing = 0;
+        palette.column_spacing = 0;
 
         var toolbox = new Gtk.FlowBox ();
 
+        var palette_window = new Gtk.ScrolledWindow (null, null);
+        palette_window.add (palette);
+
         var sidebar = new Gtk.Box(Gtk.Orientation.VERTICAL, 6);
-        sidebar.pack_start (toolbox, true);
-        sidebar.pack_start (palette, true);
+        sidebar.pack_start (toolbox, false);
+        sidebar.pack_start (palette_window, true);
         sidebar.pack_start (tileset, false);
         sidebar.hexpand = false;
 
