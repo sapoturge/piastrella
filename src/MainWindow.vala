@@ -12,6 +12,9 @@ class MainWindow : Gtk.ApplicationWindow {
 
         var tiles = new TileView ();
         tiles.image = image;
+
+        var tile_window = new Gtk.ScrolledWindow (null, null);
+        tile_window.add (tiles);
         
         var palette = new Gtk.FlowBox ();
         palette.bind_model (image.get_palette (), (obj) => {
@@ -41,7 +44,7 @@ class MainWindow : Gtk.ApplicationWindow {
 
         var layout = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         layout.pack_start (sidebar, false);
-        layout.pack_start (tiles, true, true);
+        layout.pack_start (tile_window, true, true);
         layout.expand = true;
 
         add(layout);
