@@ -11,7 +11,7 @@ public class UnknownChunk : Chunk {
         this.data = data;
     }
 
-    public override uint8[] get_data () {
+    public override uint8[] get_content () {
         return data;
     }
 }

@@ -23,6 +23,17 @@ internal class Palette : Chunk, ListModel {
     public uint get_n_items () {
         return colors.length;
     }
+
+    public override uint8[] get_content () {
+        uint8[] data = {};
+        foreach (PaletteEntry pe in colors) {
+            data += (uint8) (pe.color.red * 255);
+            data += (uint8) (pe.color.green * 255);
+            data += (uint8) (pe.color.blue * 255);
+        }
+        
+        return data;
+    }
 }
 
 public class PaletteEntry : Object {

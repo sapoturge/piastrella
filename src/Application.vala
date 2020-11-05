@@ -80,7 +80,10 @@ public class Piastrella : Gtk.Application {
         Png image;
 
         if (file.query_exists ()) {
-            image = new Png.from_file (File.new_for_commandline_arg ("test.png"));
+            image = new Png.from_file (file);
+            var save_file = File.new_for_commandline_arg ("test2.png");
+            var output = save_file.replace (null, false, FileCreateFlags.REPLACE_DESTINATION);
+            image.save (output);
         } else {
             image = new Png ();
         }

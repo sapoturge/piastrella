@@ -14,19 +14,25 @@ public class Chunk : Object {
         this.length = length;
     }
 
-    public void write_out (FileOutputStream output) {
-        uint8[] buffer = (uint8[])(&_length);
+    public void write_out (OutputStream output) throws IOError {
+        uint8[] data = get_content ();
+        uint8[] buffer = (uint8[])(&data.length);
+        if (ByteOrder.HOST == ByteOrder.LITTLE_ENDIAN) {
+            buffer = {buffer[3], buffer[2], buffer[1], buffer[0]};
+        }
         size_t written;
         output.write_all (buffer, out written);
         output.write_all (chunk_type.data, out written);
-        uint8[] data = get_data ();
         output.write_all (data, out written);
         uint32 crc = calculate_crc (data);
         buffer = (uint8[])(&crc);
+        if (ByteOrder.HOST == ByteOrder.LITTLE_ENDIAN) {
+            buffer = {buffer[3], buffer[2], buffer[1], buffer[0]};
+        }
         output.write_all (buffer, out written);
     }
 
-    public virtual uint8[] get_data () {
+    public virtual uint8[] get_content () {
         return {};
     }
 

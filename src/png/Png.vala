@@ -116,6 +116,21 @@ public class Png : Object {
         surface = new Cairo.ImageSurface.for_data (pixel_data, Cairo.Format.ARGB32, header.width, header.height, header.width * 4);
     }
 
+    public bool save (OutputStream stream) {
+        try {
+            size_t written = 0;
+            stream.write_all ({137, 80, 78, 71, 13, 10, 26, 10}, out written);
+
+            foreach (Chunk chunk in chunks) {
+                chunk.write_out (stream);
+            }
+            return true;
+        } catch (IOError err) {
+            print ("Error saving file: %s\n", err.message);
+            return false;
+        }
+    }
+
     public Gdk.RGBA get_color (int x, int y) {
         int index = data.pixels [y, x];
         return ((PaletteEntry) palette.get_item (index)).color;

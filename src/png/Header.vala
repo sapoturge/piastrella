@@ -37,4 +37,44 @@ internal class Header : Chunk {
         filter = data[11];
         interlace = data[12];
     }
+
+    public override uint8[] get_content () {
+        var data = new uint8[] {};
+        var size = width;
+        var size_data = (uint8[]) (&size);
+
+        if (ByteOrder.HOST == ByteOrder.LITTLE_ENDIAN) {
+            data += size_data[3];
+            data += size_data[2];
+            data += size_data[1];
+            data += size_data[0];
+        } else {
+            data += size_data[0];
+            data += size_data[1];
+            data += size_data[2];
+            data += size_data[3];
+        }
+
+        size = height;
+        size_data = (uint8[]) (&size);
+
+        if (ByteOrder.HOST == ByteOrder.LITTLE_ENDIAN) {
+            data += size_data[3];
+            data += size_data[2];
+            data += size_data[1];
+            data += size_data[0];
+        } else {
+            data += size_data[0];
+            data += size_data[1];
+            data += size_data[2];
+            data += size_data[3];
+        }
+
+        data += (uint8) bit_depth;
+        data += (uint8) color_type;
+        data += (uint8) compression;
+        data += (uint8) filter;
+        data += (uint8) interlace;
+        return data;
+    }
 }
