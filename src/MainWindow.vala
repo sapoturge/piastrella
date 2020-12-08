@@ -25,11 +25,15 @@ class MainWindow : Gtk.ApplicationWindow {
             return chooser;
         });
         palette.homogeneous = true;
-        // palette.min_children_per_line = 8;
         palette.max_children_per_line = 8;
         palette.selection_mode = 0;
         palette.row_spacing = 0;
         palette.column_spacing = 0;
+        palette.selection_mode = Gtk.SelectionMode.BROWSE;
+        palette.child_activated.connect ((child) => {
+            var chooser = (ColorButton) child.get_child ();
+            image.color = chooser.rgba;
+        });
 
         var toolbox = new Gtk.FlowBox ();
 

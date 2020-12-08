@@ -171,7 +171,7 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
         int tile_y = y / 16;
         int inner_y = y % 16;
         int tile_index = tiles[tile_x, tile_y];
-        image.set_pixel ((tile_index % 16) * 16 + inner_x, (tile_index / 16) * 16 + inner_y, 0);
+        image.set_pixel ((tile_index % 16) * 16 + inner_x, (tile_index / 16) * 16 + inner_y);
     }
 
     private void draw_line (int x, int y) {

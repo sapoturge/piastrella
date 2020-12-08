@@ -28,6 +28,21 @@ public class Png : Object {
         }
     }
 
+    private uint8 _color;
+    public Gdk.RGBA color {
+        get {
+            return ((PaletteEntry) palette.get_item (_color)).color;
+        }
+        set {
+            for (_color = 0; _color < 256; _color++) {
+                if (((PaletteEntry) palette.get_item (_color)).color == value) {
+                    break;
+                }
+            }
+        }
+    }
+            
+
     public signal void update ();
 
     public bool editing { get; private set; default=false; }
@@ -141,7 +156,7 @@ public class Png : Object {
         }
     }
 
-    public Gdk.RGBA get_color (int x, int y) {
+    public Gdk.RGBA get_pixel_color (int x, int y) {
         int index = data.pixels [y, x];
         return ((PaletteEntry) palette.get_item (index)).color;
     }
@@ -151,12 +166,12 @@ public class Png : Object {
         editing = true;
     }
 
-    public void set_pixel(int x, int y, uint8 color) {
+    public void set_pixel(int x, int y) {
         if (!editing) {
             start_editing ();
         }
         changed = true;
-        data.pixels[y, x] = color;
+        data.pixels[y, x] = _color;
         refresh_pixels (x, x+1, y, y+1);
         update ();
     }
@@ -182,7 +197,7 @@ public class Png : Object {
     private void refresh_pixels (int start_x, int end_x, int start_y, int end_y) {
         for (int y = start_y; y < end_y; y++) {
             for (int x = start_x; x < end_x; x++) {
-                var color = get_color (x, y);
+                var color = get_pixel_color (x, y);
                 pixel_data [(y * width + x) * 4 + 0] = (uchar) (color.blue * 255);
                 pixel_data [(y * width + x) * 4 + 1] = (uchar) (color.green * 255);
                 pixel_data [(y * width + x) * 4 + 2] = (uchar) (color.red * 255);
