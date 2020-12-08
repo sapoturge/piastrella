@@ -3,6 +3,9 @@ class TileSetView : Gtk.DrawingArea {
 
     public TileSetView (Png image) {
         this.image = image;
+        this.image.update.connect (() => {
+            queue_draw ();
+        });
         set_size_request (image.width, image.height);
     }
 

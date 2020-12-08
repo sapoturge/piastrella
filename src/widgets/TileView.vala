@@ -5,7 +5,18 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
     private int width;
     private int height;
 
-    public Png image { get; set; }
+    private Png _image;
+    public Png image {
+        get {
+            return _image;
+        }
+        set {
+            _image = value;
+            _image.update.connect (() => {
+                update ();
+            });
+        }
+    }
 
     private Gtk.Adjustment _hadjustment;
     private Gtk.Adjustment _vadjustment;
@@ -143,7 +154,6 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
             
             draw_line(x, y);
 
-            update ();
             last_x = x;
             last_y = y;
         });

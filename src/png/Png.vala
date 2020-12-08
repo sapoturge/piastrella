@@ -28,6 +28,8 @@ public class Png : Object {
         }
     }
 
+    public signal void update ();
+
     public bool editing { get; private set; default=false; }
     private bool changed { get; private set; default=false; }
 
@@ -156,6 +158,7 @@ public class Png : Object {
         changed = true;
         data.pixels[y, x] = color;
         refresh_pixels (x, y, x+1, y+1);
+        update ();
     }
 
     public void finish_editing() {
@@ -169,6 +172,7 @@ public class Png : Object {
     public void set_pixels (uint8[,] pixels) {
         data.pixels = pixels;
         refresh_pixels (0, width, 0, height);
+        update ();
     }
 
     public Cairo.Surface get_surface () {
