@@ -4,6 +4,9 @@ public class Png : Object {
     private Palette palette;
     private ImageData data;
 
+    private UndoStack stack;
+    private uint8[,] last_pixels;
+
     private uchar[] pixel_data;
     private Cairo.Surface surface;
 
@@ -24,6 +27,9 @@ public class Png : Object {
             header.height = value;
         }
     }
+
+    public bool editing { get; private set; default=false; }
+    private bool changed { get; private set; default=false; }
 
     public Png () {
         header = new Header ();
@@ -136,6 +142,25 @@ public class Png : Object {
         return ((PaletteEntry) palette.get_item (index)).color;
     }
 
+    public void start_editing() {
+        last_pixels = data.pixels;
+        editing = true;
+    }
+
+    public void set_pixel(int x, int y, uint8 color) {
+        changed = true;
+        data.pixels[y, x] = color;
+        refresh_pixels ();
+    }
+
+    public void finish_editing() {
+        editing = false;
+        if (changed) {
+            changed = false;
+            stack.add_command(new EditingCommand(this, last_pixels, data.pixels));
+        }
+    }
+        
     public void set_pixels (uint8[,] pixels) {
         data.pixels = pixels;
         refresh_pixels ();

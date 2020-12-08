@@ -29,7 +29,7 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
                 _hadjustment.step_increment = 1;
             }
 
-            _hadjustment.value_changed.connect (() => { updated (); });
+            _hadjustment.value_changed.connect (() => { update (); });
         }
     }
 
@@ -52,7 +52,7 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
                 _vadjustment.step_increment = 1;
             }
 
-            _vadjustment.value_changed.connect (() => { updated (); });
+            _vadjustment.value_changed.connect (() => { update (); });
         }
     }
 
@@ -60,7 +60,7 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
 
     public Gtk.ScrollablePolicy vscroll_policy { get; set; default = NATURAL; }
 
-    public signal void updated ();
+    public signal void update ();
 
     public TileView () {
     }
@@ -71,6 +71,8 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
     }
 
     construct {
+        add_events (Gdk.EventMask.BUTTON_PRESS_MASK |
+                    Gdk.EventMask.BUTTON_RELEASE_MASK);
         draw.connect ((cr) => {
             cr.save ();
             cr.translate ((int) (-hadjustment.value), (int) (-vadjustment.value));
@@ -101,7 +103,7 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
             tiles[i % 16, i / 16] = i;
         }
 
-        updated.connect (() => {
+        update.connect (() => {
             queue_draw ();
         });
 
@@ -117,6 +119,21 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
 
             vadjustment.lower = -height / 2;
             vadjustment.upper = image.height * zoom + height / 2;
+        });
+
+        button_press_event.connect ((event) => {
+            double x = (event.x - hadjustment.value) / zoom;
+            double y = (event.y - vadjustment.value) / zoom;
+            image.start_editing ();
+            
+            image.set_pixel ((int)x, (int)y, 0);
+            update ();
+        });
+
+        button_release_event.connect ((event) => {
+            if (image.editing) {
+                image.finish_editing ();
+            }
         });
     }
 }
