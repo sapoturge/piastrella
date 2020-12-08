@@ -137,8 +137,8 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
         });
 
         button_press_event.connect ((event) => {
-            int x = (int) ((event.x - hadjustment.value) / zoom);
-            int y = (int) ((event.y - vadjustment.value) / zoom);
+            int x = (int) ((event.x + hadjustment.value) / zoom);
+            int y = (int) ((event.y + vadjustment.value) / zoom);
             image.start_editing ();
             
             draw_pixel (x, y);
@@ -149,8 +149,8 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
         });
 
         motion_notify_event.connect ((event) => {
-            int x = (int) ((event.x - hadjustment.value) / zoom);
-            int y = (int) ((event.y - vadjustment.value) / zoom);
+            int x = (int) ((event.x + hadjustment.value) / zoom);
+            int y = (int) ((event.y + vadjustment.value) / zoom);
             
             draw_line(x, y);
 

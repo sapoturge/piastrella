@@ -157,7 +157,7 @@ public class Png : Object {
         }
         changed = true;
         data.pixels[y, x] = color;
-        refresh_pixels (x, y, x+1, y+1);
+        refresh_pixels (x, x+1, y, y+1);
         update ();
     }
 
