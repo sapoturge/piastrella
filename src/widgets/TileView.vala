@@ -10,6 +10,9 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
     private Gtk.Adjustment _hadjustment;
     private Gtk.Adjustment _vadjustment;
 
+    private int last_x;
+    private int last_y;
+
     public Gtk.Adjustment hadjustment {
         get {
             return _hadjustment;
@@ -72,6 +75,7 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
 
     construct {
         add_events (Gdk.EventMask.BUTTON_PRESS_MASK |
+                    Gdk.EventMask.BUTTON_MOTION_MASK |
                     Gdk.EventMask.BUTTON_RELEASE_MASK);
         draw.connect ((cr) => {
             cr.save ();
@@ -122,12 +126,26 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
         });
 
         button_press_event.connect ((event) => {
-            double x = (event.x - hadjustment.value) / zoom;
-            double y = (event.y - vadjustment.value) / zoom;
+            int x = (int) ((event.x - hadjustment.value) / zoom);
+            int y = (int) ((event.y - vadjustment.value) / zoom);
             image.start_editing ();
             
-            image.set_pixel ((int)x, (int)y, 0);
+            draw_pixel (x, y);
+
             update ();
+            last_x = x;
+            last_y = y;
+        });
+
+        motion_notify_event.connect ((event) => {
+            int x = (int) ((event.x - hadjustment.value) / zoom);
+            int y = (int) ((event.y - vadjustment.value) / zoom);
+            
+            draw_line(x, y);
+
+            update ();
+            last_x = x;
+            last_y = y;
         });
 
         button_release_event.connect ((event) => {
@@ -135,5 +153,105 @@ class TileView : Gtk.DrawingArea, Gtk.Scrollable {
                 image.finish_editing ();
             }
         });
+    }
+
+    private void draw_pixel (int x, int y) {
+        int tile_x = x / 16;
+        int inner_x = x % 16;
+        int tile_y = y / 16;
+        int inner_y = y % 16;
+        int tile_index = tiles[tile_x, tile_y];
+        image.set_pixel ((tile_index % 16) * 16 + inner_x, (tile_index / 16) * 16 + inner_y, 0);
+    }
+
+    private void draw_line (int x, int y) {
+        if (x == last_x) {
+            if (y < last_y) {
+                for (int i = y; i <last_y; i++) {
+                    draw_pixel (x, i);
+                }
+            } else {
+                for (int i = last_y + 1; i <= y; i++) {
+                    draw_pixel (x, i);
+                }
+            }
+        } else if (y == last_y) {
+            if (x < last_x) {
+                for (int i = x; i < last_x; i++) {
+                    draw_pixel (i, y);
+                }
+            } else {
+                for (int i = last_x + 1; i <= x; i++) {
+                    draw_pixel (i, y);
+                }
+            }
+        } else {
+            int x_diff = x - last_x;
+            int y_diff = y - last_y;
+            int start_x, start_y;
+            int end_x, end_y;
+            int e;
+            if (x_diff.abs () > y_diff.abs ()) {
+                if (x_diff > 0) {
+                    start_x = last_x;
+                    start_y = last_y;
+                    end_x = x;
+                    end_y = y;
+                } else {
+                    start_x = x;
+                    start_y = y;
+                    end_x = last_x;
+                    end_y = last_y;
+                    x_diff = -x_diff;
+                    y_diff = -y_diff;
+                }
+                y = start_y;
+                e = 0;
+                print("X: %d -> %d, %d->%d\n", start_x, end_x, start_y, end_y);
+                for (x = start_x; x <= end_x; x++) {
+                    draw_pixel (x, y);
+                    if (2*(e + y_diff.abs ()) < x_diff) {
+                        e += y_diff.abs ();
+                    } else {
+                        if (y_diff > 0) {
+                            y++;
+                        } else {
+                            y--;
+                        }
+                        e += y_diff.abs () - x_diff;
+                    }
+                }
+            } else {
+                if (y_diff > 0) {
+                    start_x = last_x;
+                    start_y = last_y;
+                    end_x = x;
+                    end_y = y;
+                } else {
+                    start_x = x;
+                    start_y = y;
+                    end_x = last_x;
+                    end_y = last_y;
+                    x_diff = -x_diff;
+                    y_diff = -y_diff;
+                }
+                x = start_x;
+                e = 0;
+                print("Y: %d -> %d, %d->%d\n", start_x, end_x, start_y, end_y);
+                for (y = start_y; y <= end_y; y++) {
+                    draw_pixel (x, y);
+                    if (2*(e + x_diff.abs ()) < y_diff) {
+                        e += x_diff.abs ();
+                    } else {
+                        if (x_diff > 0) {
+                            x++;
+                        } else {
+                            x--;
+                        }
+                        e += x_diff.abs () - y_diff;
+                    }
+                }
+            }
+        }
     }
 }
