@@ -117,9 +117,11 @@ public class Png : Object {
 
         pixel_data = new uchar[header.width * header.height * 4];
 
-        refresh_pixels ();
+        refresh_pixels (0, width, 0, height);
 
         surface = new Cairo.ImageSurface.for_data (pixel_data, Cairo.Format.ARGB32, header.width, header.height, header.width * 4);
+
+        stack = new UndoStack ();
     }
 
     public bool save (OutputStream stream) {
@@ -148,9 +150,12 @@ public class Png : Object {
     }
 
     public void set_pixel(int x, int y, uint8 color) {
+        if (!editing) {
+            start_editing ();
+        }
         changed = true;
         data.pixels[y, x] = color;
-        refresh_pixels ();
+        refresh_pixels (x, y, x+1, y+1);
     }
 
     public void finish_editing() {
@@ -163,16 +168,16 @@ public class Png : Object {
         
     public void set_pixels (uint8[,] pixels) {
         data.pixels = pixels;
-        refresh_pixels ();
+        refresh_pixels (0, width, 0, height);
     }
 
     public Cairo.Surface get_surface () {
         return surface;
     }
 
-    private void refresh_pixels () {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+    private void refresh_pixels (int start_x, int end_x, int start_y, int end_y) {
+        for (int y = start_y; y < end_y; y++) {
+            for (int x = start_x; x < end_x; x++) {
                 var color = get_color (x, y);
                 pixel_data [(y * width + x) * 4 + 0] = (uchar) (color.blue * 255);
                 pixel_data [(y * width + x) * 4 + 1] = (uchar) (color.green * 255);
